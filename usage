@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cat <<'EOF'
+Running an empty container:
+to spin up an empty karaf container with this image you can just:
+
+	$ docker run -d -p 8101:8101 sneakybeaky/karaf-<version> start
+
+Then to connect to the shell
+
+	$ ssh -p 8101 -i ~/.ssh/karaf.id_dsa karaf@$(boot2docker ip 2>/dev/null)
+
+EOF
