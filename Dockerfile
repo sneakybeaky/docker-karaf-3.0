@@ -1,4 +1,4 @@
-FROM java:8u66
+FROM azul/zulu-openjdk:8u51
 
 MAINTAINER jon.barber@acm.org
 
@@ -7,13 +7,15 @@ EXPOSE 8181 8101 8778
 ENV KARAF_VERSION 3.0.4
 ENV DEPLOY_DIR /opt/karaf/deploy
 
+RUN apt-get -qq install wget
+
 RUN groupadd -r karaf && useradd -r -g karaf karaf
 RUN mkdir /opt/karaf
 RUN chown karaf:karaf /opt/karaf
 
 USER karaf
 
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/zulu-8-amd64
 
 RUN wget http://archive.apache.org/dist/karaf/${KARAF_VERSION}/apache-karaf-${KARAF_VERSION}.tar.gz -O /tmp/karaf.tar.gz
 
@@ -24,6 +26,9 @@ RUN rm /tmp/karaf.tar.gz
 
 # Add SSH keys
 ADD keys.properties /opt/karaf/apache-karaf-${KARAF_VERSION}/etc/
+
+# Add PAX URL mvn config
+ADD org.ops4j.pax.url.mvn.cfg /opt/karaf/apache-karaf-${KARAF_VERSION}/etc/
 
 # Startup and usage script
 ADD ./usage /usr/bin/
